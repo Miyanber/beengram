@@ -15,6 +15,7 @@ from django.views.generic.base import RedirectView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from django.core.mail import send_mail
 
 from .forms import (
     ConfirmForm,
@@ -22,8 +23,9 @@ from .forms import (
     ProfileEditForm,
     SearchForm,
     SignUpForm,
+    CommentForm
 )
-from .models import Post
+from .models import Post, AbstractUser, Comment
 
 User = get_user_model()
 
@@ -47,10 +49,63 @@ class SignUpView(CreateView):
     template_name = "registration/signup.html"
     success_url = reverse_lazy("signup_email_send")
     form_class = SignUpForm
+    
+    def form_valid(self, form):
+        user: AbstractUser = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        self.object = user
+        
+        current_site = get_current_site(self.request)
+        context={
+            "protocol": self.request.scheme,
+            "domain": current_site.domain,
+            # 暗号化している
+            "token": signing.dumps(user.pk),
+            "user": user, 
+        }
+        subject = "[BeEngram] アカウントを有効化して下さい"
+        message = render_to_string(
+            "registration/email/signup_message.txt", context
+        )
+        user.email_user(subject, message)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ActivateView(RedirectView):
-    pass
+    url = reverse_lazy("home")
+    max_age = 60 * 60 * 24
+    error_messages = {
+        "invalid": "不正な URL です。",
+        "expire": "URL の有効期限が切れています。",
+        "user": "このユーザーは既に削除されたか存在しません。",
+        "active": "ユーザー %(name)s は既に有効化されています。"
+    }
+    
+    def get(self, request, *args, **kwargs):
+        token = self.kwargs["token"]
+        try:
+            user_pk = signing.loads(token, max_age=self.max_age)
+        except signing.BadSignature:
+            return HttpResponseBadRequest(self.error_messages["invalid"])
+        except signing.SignatureExpired:
+            return HttpResponseBadRequest(self.error_messages["expire"])
+        
+        try:
+            user = User.objects.get(pk=user_pk)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest(self.error_messages["user"])
+        
+        if user.is_active:
+            return HttpResponseBadRequest(
+                self.error_messages["active"] % {"name": user.username}
+            )
+        
+        user.is_active = True
+        user.save()
+        login(self.request, user)
+        
+        return super().get(request, *args, **kwargs)
 
 
 class PostView(LoginRequiredMixin, CreateView):
@@ -221,3 +276,29 @@ class PostLikeAPIView(LoginRequiredMixin, View):
         except Post.DoesNotExist:
             result = "DoesNotExist"
         return JsonResponse({"result": result})
+
+
+class CommentView(LoginRequiredMixin, CreateView):
+    template_name = "main/comment_form.html"
+    model = Comment
+    form_class = CommentForm
+    
+    def get_form_kwargs(self):
+        post = get_object_or_404(Post, pk=self.kwargs["pk"])
+        self.object = self.model(user=self.request.user, post=post)
+        return super().get_form_kwargs()
+    
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     form.instance.post = self.post_obj
+    #     return super().form_valid(self)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.post_obj = get_object_or_404(Post, pk=self.kwargs["pk"])
+        context["post"] = self.post_obj
+        context["comments"] = self.post_obj.comments.all()
+        return context
+    
+    def get_success_url(self):
+        return reverse_lazy("comment", kwargs = {"pk": self.kwargs["pk"]})

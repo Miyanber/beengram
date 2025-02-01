@@ -8,7 +8,9 @@
     --orange: #ff5c33;
 }
 
-*, ::after, ::before {
+*,
+::after,
+::before {
     box-sizing: border-box;
 }
 
@@ -59,11 +61,11 @@ body {
     margin: auto;
 }
 
-#header ~ #content {
+#header~#content {
     padding: 64px 0;
 }
 
-.header-tabs ~ #content {
+.header-tabs~#content {
     padding: 88px 0 !important;
 }
 
@@ -389,7 +391,7 @@ body {
     justify-content: center;
 }
 
-.profile__row > * {
+.profile__row>* {
     flex: 1;
 }
 
@@ -448,14 +450,62 @@ a.profile-counter {
     padding: 0;
     margin: 0;
     list-style: none;
+    /* なおGridを使えば「最後の一つは左寄せ」を容易に実装可能！！ */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center; */
 }
 
 .post-grid__item {
     display: block;
     padding: 4px;
+
+    /* flex: 0 0 auto;
+    width: calc(100% / 3); */
 }
 
 .post-grid__item img {
     display: block;
     width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.comment__item {
+    padding: .5em;
+
+    .user {
+        img {
+            width: 36px;
+            height: 36px;
+        }
+    
+        span {
+            line-height: 36px;
+        }
+    }
+
+    .created_at {
+        margin: 0;
+        color: #444;
+    }
+}
+
+.comment-list {
+    padding: 0 8px;
+}
+
+.comment__item.child {
+    margin-left: 2em;
+}
+
+.comment_form {
+    margin: 0;
+
+    .form-field {
+        margin: 0;
+    }
 }

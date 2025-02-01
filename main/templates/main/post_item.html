@@ -1,10 +1,8 @@
-{% extends "main/base.html" %}
-{% load static %}
-
-{% block content %}
 <div class="post">
     <div class="post__image">
-        <img src="{{ post.img.url }}">
+        <a href="{% url 'post_detail' post.pk %}">
+            <img src="{{ post.img.url }}">
+        </a>
         <div class="menu-button" role="button">
             <i class="fas fa-ellipsis-h"></i>
             <div class="action-menu">
@@ -36,11 +34,3 @@
         {{ post.note }}
     </div>
 </div>
-{% endblock %}
-
-{% block footer %}{% include "main/footer.html" with has_floating_button=True %}{% endblock %}
-
-{% block extra_js %}
-<script src="{% static 'main/js/action-menu.js' %}"></script>
-<script src="{% static 'main/js/like-post.js' %}"></script>
-{% endblock %}

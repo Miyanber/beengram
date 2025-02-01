@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Post, User
+from .models import Post, User, Comment
 
 
 class SignUpForm(UserCreationForm):
@@ -54,3 +54,17 @@ class SearchForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={"placeholder": "検索"}),
     )
+
+
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = ("parent", "content", "is_anonymous", )
+        widgets = {
+            "text": forms.Textarea(
+                attrs={
+                    "placeholder": "コメント（150字以内）",
+                }
+            ),
+        }
