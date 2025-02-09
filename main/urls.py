@@ -25,7 +25,8 @@ urlpatterns = [
         name="signup_email_send",
     ),
     path("activate/<token>/", views.ActivateView.as_view(), name="activate"),
-    path("post/<int:pk>", views.PostDetailView.as_view(), name="post_detail"),
+    # path("post/<int:pk>", views.PostDetailView.as_view(), name="post_detail"),
+    path("comment/<int:pk>", views.CommentView.as_view(), name="comment"),
     path("post/", views.PostView.as_view(), name="new_post"),
     path(
         "delete_post/<int:pk>",
@@ -45,5 +46,4 @@ urlpatterns = [
     ),
     path("search/", views.SearchView.as_view(), name="search"),
     path("like/<int:pk>", views.PostLikeAPIView.as_view(), name="like"),
-    path("comment/<int:pk>", views.CommentView.as_view(), name="comment"),
 ]
