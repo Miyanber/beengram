@@ -129,15 +129,15 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         return super().get_queryset().filter(user=self.request.user)
 
 
-class PostDetailView(LoginRequiredMixin, DetailView):
-    model = Post
+# class PostDetailView(LoginRequiredMixin, DetailView):
+#     model = Post
 
-    def get_queryset(self):
-        return (
-            super()
-            .get_queryset()
-            .select_related("user")
-        )
+#     def get_queryset(self):
+#         return (
+#             super()
+#             .get_queryset()
+#             .select_related("user")
+#         )
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):

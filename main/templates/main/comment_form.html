@@ -5,104 +5,42 @@
 
 {% include "main/post_item.html" %}
 
-<form action="" method="post" class="form comment_form">
-    {% csrf_token %}
-    {{ form.errors }}
-    <div class="form-field">
-        {{ form.content }}
-    </div>
-    <div class="button-field form-field--submit">
-        <button type="submit" class="round-button">コメント</button>
-    </div>
-</form>
-
 <div class="comment-list">
     <h2>コメント</h2>
-    {% for comment in comments %}
-    {% if not comment.parent %}
-    <div class="comment__item">
-        <div class="comment__item">
-            {% if not comment.is_anonymous %}
-            <a href="{% url 'profile' comment.user.pk %}" class="user">
-                <img src="{{ comment.user.icon_url }}">
-                <span>{{ comment.user.username }}</span>
-            </a>
-            {% else %}
-            <p class="user">
-                <img src="{% static 'main/img/default-icon.svg' %}">
-                <span>匿名ユーザー</span>
-            </p>
-            {% endif %}
-            <p class="content">
-                {{ comment.content }}
-            </p>
-            <p class="created_at">
-                {{ comment.created_at }}
-            </p>
-            <p class="comment_form_link" data-pk="{{ comment.pk }}">
-                <i class="fas fa-comments"></i><span>返信</span>
-            </p>
-        </div>
-        
-        <form action="" method="post" id="{{ comment.pk }}-comment_form" class="form comment_form" hidden>
-            {% csrf_token %}
-            {{ form.errors }}
-            <div class="form-field">
-                <textarea name="content" id="id_content" cols="30" rows="10"></textarea>
-                <input type="hidden" id="id_parent" name="parent" value="{{ comment.pk }}">
-            </div>
-            <div class="button-field form-field--submit">
-                <label for="{{ form.is_anonymous.id_for_label }}">
-                    匿名送信{{ form.is_anonymous }}
-                </label>
-                <button type="submit" class="round-button">コメント</button>
-            </div>
-        </form>
 
-        <div class="comment-list">
-            {% for child in comment.children.all %}
-            <div class="comment__item child">
-                {% if not child.is_anonymous %}
-                <a href="{% url 'profile' comment.user.pk %}" class="user">
-                    <img src="{{ child.user.icon_url }}">
-                    <span>{{ child.user.username }}</span>
-                </a>
-                {% else %}
-                <p class="user">
-                    <img src="{% static 'main/img/default-icon.svg' %}">
-                    <span>匿名ユーザー</span>
-                </p>
-                {% endif %}
-                <p class="content">
-                    {{ child.content }}
-                </p>
-                <p class="created_at">
-                    {{ child.created_at }} 
-                </p>
-                <p class="comment_form_child_link" data-pk="{{ child.pk }}">
-                    <i class="fas fa-comments"></i><span>返信</span>
-                </p>
-                <form action="" method="post" id="{{ child.pk }}-comment_form_child" class="form comment_form" hidden>
-                    {% csrf_token %}
-                    {{ form.errors }}
-                    <div class="form-field">
-                        <textarea name="content" id="id_content" cols="30" rows="10">@{{ child.user.username }} </textarea>
-                        <input type="hidden" id="id_parent" class="{{ child.pk }}-comment_form-id_parent" name="parent" value="{{ comment.pk }}">
-                    </div>
-                    <div class="button-field form-field--submit">
-                        <label for="{{ form.is_anonymous.id_for_label }}">
-                            匿名送信{{ form.is_anonymous }}
-                        </label>
-                        <button type="submit" class="round-button">コメント</button>
-                    </div>
-                </form>
+    <form action="" method="post" class="form comment_form top-form">
+        {% csrf_token %}
+        {{ form.errors }}
+        <div class="box">
+            <div class="icon">
+                <img src="{{ request.user.icon_url }}">
             </div>
-            {% endfor %}
+            <div class="form-field">
+                <textarea placeholder="コメントを追加" name="content" id="id_content" cols="30" rows="1"></textarea>
+            </div>
         </div>
-    </div>
-    {% endif %}
+
+        <div class="button-field form-field--submit">
+            <label for="{{ form.is_anonymous.id_for_label }}">
+                匿名送信{{ form.is_anonymous }}
+            </label>
+            <button type="submit" class="round-button">コメント</button>
+        </div>
+    </form>
+
+    {% for comment in comments %}
+        {% if not comment.parent %}
+            {% include "main/items/comment_item.html" with comment=comment %}
+        {% endif %}
+
+        {% for child in comment.children.all %}
+            {% include "main/items/comment_item.html" with comment=child is_child=True parent_pk=comment.pk %}
+        {% endfor %}
+
     {% endfor %}
 </div>
+
+
 
 {% endblock content %}
 

@@ -1,0 +1,48 @@
+{% load static %}
+<div class="comment {% if is_child %}child{% endif %}">
+    <a class="comment__icon" href="{% url 'profile' comment.user.pk %}">
+        {% if not comment.is_anonymous %}
+            <img src="{{ comment.user.icon_url }}">
+        {% else %}
+            <img src="{% static 'main/img/default-icon.svg' %}">
+        {% endif %}
+    </a>
+    <div class="comment__body">
+        <div class="comment__body__header">
+            <a class="username" href="{% url 'profile' comment.user.pk %}">
+                {% if not comment.is_anonymous %}@{{ comment.user.username }}{% else %}匿名ユーザー{% endif %}
+            </a>
+            <span class="created_at">
+                {{ comment.created_at }} 
+            </span>
+        </div>
+        <div class="comment__body__content">
+            {{ comment.content }}
+        </div>
+        <div class="comment__body__actions">
+            <div class="comment_form_link" data-pk="{{ comment.pk }}">
+                <i class="fas fa-comments"></i><span>返信</span>
+            </div>
+        </div>
+        <form action="" method="post" id="{{ comment.pk }}-comment_form" class="form comment_form" hidden>
+            {% csrf_token %}
+            {{ form.errors }}
+            <div class="box">
+                <div class="icon">
+                    <img src="{{ request.user.icon_url }}">
+                </div>
+                <div class="form-field">
+                    <textarea name="content" id="id_content" cols="30" rows="1">{% if is_child %}@{{ comment.user.username }} {% endif %}</textarea>
+                    <input type="hidden" id="id_parent" name="parent" value="{% if not is_child %}{{ comment.pk }}{% else %}{{ parent_pk }}{% endif %}">
+                </div>
+            </div>
+            
+            <div class="button-field form-field--submit">
+                <label for="{{ form.is_anonymous.id_for_label }}">
+                    匿名送信{{ form.is_anonymous }}
+                </label>
+                <button type="submit" class="round-button">コメント</button>
+            </div>
+        </form>
+    </div>
+</div>

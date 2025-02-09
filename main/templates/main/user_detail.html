@@ -58,7 +58,7 @@
 <ul class="post-grid">
     {% for post in user.posts.all %}
     <li class="post-grid__item">
-        <a href="{% url 'post_detail' post.pk %}"><img src="{{ post.img.url }}"></a>
+        <a href="{% url 'comment' post.pk %}"><img src="{{ post.img.url }}"></a>
     </li>
     {% endfor %}
 </ul>
@@ -66,7 +66,7 @@
 <ul class="post-grid">
     {% for post in user.like.all %}
     <li class="post-grid__item">
-        <a href="{% url 'post_detail' post.pk %}"><img src="{{ post.img.url }}"></a>
+        <a href="{% url 'comment' post.pk %}"><img src="{{ post.img.url }}"></a>
     </li>
     {% endfor %}
 </ul>

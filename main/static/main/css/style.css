@@ -128,7 +128,6 @@ body {
     right: 16px;
     bottom: 72px;
     width: 48px;
-    height: 48px;
     border-radius: 50%;
     font-size: 24px;
     line-height: 48px;
@@ -145,6 +144,10 @@ body {
     height: 100%;
     color: inherit;
     text-decoration: none;
+}
+
+.header-tabs .tab {
+    height: 2em;
 }
 
 .form {
@@ -234,19 +237,42 @@ body {
     width: 100%;
 }
 
-.post {
-    padding: 8px;
+/* user */
+
+.user {
+    display: flex;
+    color: inherit;
+    text-decoration: none;
+
+    img {
+        width: 2em;
+        height: 2em;
+        margin-right: .5em;
+        border-radius: 50%;
+    }
+
+    span {
+        font-size: 1em;
+        line-height: 2em;
+    }
 }
 
-.post__image {
+/* post */
+
+.post {
+    margin: 1em .5em 3em;
+}
+
+.post__user {
+    padding: .5em .2em;
     position: relative;
 }
 
-.post__image .menu-button {
+.menu-button {
     position: absolute;
     display: block;
-    top: 0;
-    right: 8px;
+    top: .3em;
+    right: .3em;
     font-size: 1.5em;
     color: var(--darkgray);
 }
@@ -258,44 +284,32 @@ body {
 
 .post__actions {
     display: flex;
-    margin: 4px 0;
 }
 
 .post__like {
-    font-size: 32px;
-    margin: 0 16px;
-}
+    font-size: 1.8em;
+    margin: 0 .3em;
 
-.post__user {
-    margin: 0 16px 0 auto;
-}
+    a {
+        display: inline-flex;
+        column-gap: .2em;
+        color: inherit;
+        text-decoration: none;
 
-.user {
-    display: flex;
-    color: inherit;
-    text-decoration: none;
-}
-
-.user img {
-    width: 48px;
-    height: 48px;
-    margin-right: 8px;
-    border-radius: 50%;
-}
-
-.user span {
-    font-size: 20px;
-    line-height: 48px;
-}
-
-.post__like a {
-    color: inherit;
-    text-decoration: none;
+        .count {
+            font-size: .5em;
+            line-height: 2em;
+        }
+    }
 }
 
 .post__user a {
     color: inherit;
     text-decoration: none;
+}
+
+.post__body {
+    padding: .1em .5em;
 }
 
 .post__response img {
@@ -474,23 +488,65 @@ a.profile-counter {
     object-fit: cover;
 }
 
-.comment__item {
-    padding: .5em;
+/* comment */
 
-    .user {
-        img {
-            width: 36px;
-            height: 36px;
-        }
-    
-        span {
-            line-height: 36px;
-        }
+.comment {
+    padding: .5em;
+    display: flex;
+}
+
+.comment.child {
+    margin-left: 3em;
+}
+
+.comment__icon {
+    width: 3em;
+    padding-top: .5em;
+
+    img {
+        width: 3em;
+        height: 3em;
+        border-radius: 50%;
+    }
+}
+
+.comment__body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 .5em;
+    width: 100%;
+}
+
+.comment__body__header {
+    justify-content: space-between;
+
+    .username {
+        font-weight: bold;
+        text-decoration: none;
+        color: var(--black);
     }
 
     .created_at {
-        margin: 0;
-        color: #444;
+        font-size: .8em;
+        color: var(--darkgray);
+    }
+}
+
+.comment__body__actions {
+    display: flex;
+    justify-content: space-between;
+
+    .like {
+        display: flex;
+        align-items: center;
+        column-gap: .2em;
+        color: var(--darkgray);
+        text-decoration: none;
+    }
+
+    .like--active {
+        color: var(--orange);
     }
 }
 
@@ -498,14 +554,65 @@ a.profile-counter {
     padding: 0 8px;
 }
 
-.comment__item.child {
-    margin-left: 2em;
-}
-
 .comment_form {
     margin: 0;
 
+    .box {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+        padding: 0;
+    }
+
+    .icon img {
+        margin-top: .5em;
+        width: 2em;
+        height: 2em;
+        border-radius: 50%;
+    }
+
     .form-field {
         margin: 0;
+
+        textarea {
+            margin-top: .5em;
+            border-radius: 0;
+            padding: .5em;
+            border: none;
+            border-bottom: .2em solid var(--gray);
+            field-sizing: content;
+            min-height: min-content;
+            font-size: 1.1em;
+        }
+
+        textarea:focus {
+            border: none;
+            outline: none;
+            border-bottom: .2em solid var(--darkgray);
+        }
+    }
+
+    .button-field {
+        text-align: right;
+
+        .round-button {
+            margin: 0;
+            padding: .3em .5em;
+            font-size: 1em;
+            line-height: normal;
+            width: auto;
+        }
+    }
+}
+
+.top-form.comment_form .box {
+    .icon img {
+        width: 3em;
+        height: 3em;
+        margin-right: .2em;
+    }
+
+    .form-field textarea {
+        font-size: 1.2em;
     }
 }
