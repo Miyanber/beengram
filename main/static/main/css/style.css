@@ -41,7 +41,7 @@ body {
 .header-tabs {
     position: fixed;
     width: 100%;
-    height: 24px;
+    height: 2em;
     top: 64px;
     background-color: var(--white);
     z-index: 1;
@@ -54,6 +54,7 @@ body {
     bottom: 0;
     background-color: var(--white);
     z-index: 1;
+    box-shadow: 0 1em 3em var(--indigo);
 }
 
 #content {
@@ -316,8 +317,28 @@ body {
     height: 1rem;
 }
 
+.like {
+    i.fas {
+        display: none;
+    }
+
+    i.fa-regular {
+        display: inline;
+    }
+}
+
 .like--active * {
     color: var(--orange);
+}
+
+.like--active {
+    i.fas {
+        display: inline;
+    }
+
+    i.fa-regular {
+        display: none;
+    }
 }
 
 .action-menu {
@@ -580,7 +601,7 @@ a.profile-counter {
             padding: .5em;
             border: none;
             border-bottom: .2em solid var(--gray);
-            field-sizing: content;
+            box-sizing: content-box;
             min-height: min-content;
             font-size: 1.1em;
         }

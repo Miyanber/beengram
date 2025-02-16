@@ -28,11 +28,11 @@
             xhr.onload = function (e) {
                 if (xhr.readyState === 4) {
                     result = JSON.parse(xhr.responseText)
-                  if (xhr.status === 200 && result["result"] === "success") {
-                    icon.classList.toggle("like--active");
-                  }
+                    if (xhr.status === 200 && result["result"] === "success") {
+                        icon.classList.toggle("like--active");
+                    }
                 }
-              };
+            };
             xhr.send();
         });
     }

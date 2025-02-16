@@ -24,8 +24,9 @@
     </div>
     <div class="post__actions">
         <div class="post__like">
-            <a class="like{% if post in user.like.all %} like--active{% endif %}" data-pk="{{post.pk}}">
+            <a class="like{% if post in user.like.all %} like--active{% endif %}" data-pk="{{ post.pk }}">
                 <i class="fas fa-heart"></i>
+                <i class="fa-regular fa-heart"></i>
                 <span class="count">100</span>
             </a>
         </div>
